@@ -4,7 +4,7 @@ const Toys0to3 = () => {
   const [showAdd, setShowAdd] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false); // New state for showing confirmation message
   const [formData, setFormData] = useState({
-    name: "", // Added name field
+    name: "",
     address: "",
     pincode: "",
     paymentMethod: "",
@@ -16,7 +16,7 @@ const Toys0to3 = () => {
     {
       name: "Soft Teddy Bear",
       price: "5000",
-      image: "", // Add a proper image path here
+      image: "soft-teddy-bear.jpg", // Add a proper image path
     },
     {
       name: "Stacking Rings",
@@ -26,7 +26,102 @@ const Toys0to3 = () => {
     {
       name: "Baby Rattle",
       price: "3000",
-      image: "baby-rattle.jpg",
+      image: "hello.webp",
+    },
+    {
+      name: "Toy Car",
+      price: "1500",
+      image: "toy-car.webp",
+    },
+    {
+      name:"Bulid and Construction set",
+      price:"250",
+      image:"z1.jpg",
+    },
+    {
+      name:"LCD Writing pad",
+      price:"300",
+      image:"z2.jpg",
+    },
+    {
+      name:"Flash cards",
+      price:"450",
+      image:"z3.jpg",
+    },
+    {
+      name:"Einstein Box",
+      price:"800",
+      image:"z4.jpg",
+    },
+    {
+      name:"Nizomi Pup Buddies",
+      price:"399",
+      image:"z5.jpg",
+    },
+    {
+      name:"Funskool Games Memory Alphabets",
+      price:"545",
+      image:"z6.jpg",
+    },
+    {
+      name:"Funskool - Play & Learn-Vehicles",
+      price:"564",
+      image:"z7.jpg",
+    },
+    {
+      name:"Funskool - Play & Learn-Animals",
+      price:"445",
+      image:"z8.jpg",
+    },
+    {
+      name:"Funskool Keymon 4-in-1",
+      price:"448",
+      image:"z9.jpg",
+    },
+    {
+      name:"Lego Chima Stinger Duel",
+      price:"454",
+      image:"z10.jpg",
+    },
+    {
+      name:"Lego Chima Bat Strike",
+      price:"646",
+      image:"z11.jpg",
+    },
+    {
+      name:"Funskool Keymon Chase Game",
+      price:"454",
+      image:"z12.jpg",
+    },
+    {
+      name:"First's Block Shapes and Sorter",
+      price:"500",
+      image:"z13.jpg",
+    },
+    {
+      name:"TOYKRAFTT 2 Piece Puzzles",
+      price:"500",
+      image:"z14.jpg",
+    },
+    {
+      name:"TOYKRAFT 2 Piece Animal Puzzles",
+      price:"600",
+      image:"z15.jpg",
+    },
+    {
+      name:"Funskool Giggles - Chain Links",
+      price:"200",
+      image:"z16.jpg",
+    },
+    {
+      name:"Skillofun Take Apart Puzzle Hen Chick",
+      price:"400",
+      image:"z17.jpg",
+    },
+    {
+      name:"Funskool Giggles",
+      price:"300",
+      image:"z18.jpg",
     },
   ];
 
@@ -43,7 +138,13 @@ const Toys0to3 = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (formData.name && formData.address && formData.pincode && formData.paymentMethod && formData.mobileNumber) {
+    if (
+      formData.name &&
+      formData.address &&
+      formData.pincode &&
+      formData.paymentMethod &&
+      formData.mobileNumber
+    ) {
       // After successful form submission, show confirmation
       setShowAdd(false); // Close the form modal
       setShowConfirmation(true); // Show the confirmation message
@@ -73,17 +174,16 @@ const Toys0to3 = () => {
             className="bg-white rounded-lg shadow-lg overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-2xl"
           >
             <img
-              src={`path/to/images/${toy.image}`} // Replace with the correct image path
+              src={`/${toy.image}`} // Correct path for images in the public folder
               alt={toy.name}
               className="w-full h-40 object-cover"
             />
             <div className="p-4">
               <h2 className="text-lg font-semibold text-gray-800">{toy.name}</h2>
               <p className="text-xl text-purple-600 font-bold mb-4">
-                <span className="text-3xl">₹</span>
+                <span className="text-lg">₹</span> {/* Decreased size of rupee symbol */}
                 {toy.price}
               </p>
-              {/* Buy Now Button */}
               <button
                 onClick={() => handleBuyNow(toy)}
                 className="w-full mt-4 py-2 bg-gradient-to-br from-purple-500 to-purple-700 text-white text-lg font-semibold rounded-lg hover:bg-gradient-to-br hover:from-purple-600 hover:to-purple-800 active:scale-95 transition-all duration-300 shadow-md hover:shadow-xl"
@@ -101,7 +201,6 @@ const Toys0to3 = () => {
           <div className="w-1/3 bg-white rounded-lg p-6 shadow-lg">
             <h2 className="text-xl font-semibold mb-4">Enter your details</h2>
             <form onSubmit={handleSubmit}>
-              {/* Name Field */}
               <div className="mb-4">
                 <label className="block text-gray-700">Name:</label>
                 <input
@@ -113,7 +212,6 @@ const Toys0to3 = () => {
                   required
                 />
               </div>
-              {/* Address Field */}
               <div className="mb-4">
                 <label className="block text-gray-700">Address:</label>
                 <input
@@ -125,7 +223,6 @@ const Toys0to3 = () => {
                   required
                 />
               </div>
-              {/* Pincode Field */}
               <div className="mb-4">
                 <label className="block text-gray-700">Pincode:</label>
                 <input
@@ -137,7 +234,6 @@ const Toys0to3 = () => {
                   required
                 />
               </div>
-              {/* Payment Method Field */}
               <div className="mb-4">
                 <label className="block text-gray-700">Payment Method:</label>
                 <input
@@ -149,7 +245,6 @@ const Toys0to3 = () => {
                   required
                 />
               </div>
-              {/* Mobile Number Field */}
               <div className="mb-4">
                 <label className="block text-gray-700">Mobile Number:</label>
                 <input
@@ -190,7 +285,7 @@ const Toys0to3 = () => {
               Your order will be dispatched soon. Thank you for shopping with us!
             </p>
             <button
-              onClick={() => setShowConfirmation(false)} // Close confirmation
+              onClick={() => setShowConfirmation(false)}
               className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md"
             >
               Close

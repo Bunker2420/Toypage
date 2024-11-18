@@ -4,7 +4,7 @@ const Toys4to8 = () => {
   const [showAdd, setShowAdd] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false); // State for confirmation message
   const [formData, setFormData] = useState({
-    name: "",         // New name field added
+    name: "", // Name field
     address: "",
     pincode: "",
     paymentMethod: "",
@@ -26,8 +26,84 @@ const Toys4to8 = () => {
     {
       name: "Toy Car",
       price: "800",
-      image: "toy-car.jpg",
+      image: "image.webp",
     },
+    {
+      name:"Funskool Games, Snakes & Ladders",
+      price:"900",
+      image:"z19.jpg",
+    },
+    {
+      name:"Funskool Handycrafts",
+      price:"700",
+      image:"z20.jpg",
+    },
+    {
+      name:"Fisher Price Magnetic Puzzle",
+      price:"900",
+      image:"z21.jpg",
+    },
+    {
+      name:"Little Genius Wood Alphabet Turtle Puzzle",
+      price:"100",
+      image:"z22.jpg",
+    },
+    {
+      name:"Little Genius My Face Puzzle",
+      price:"600",
+      image:"z23.jpg",
+    },
+    {
+      name:"Little Genius Number Butterfly Puzzle Strip",
+      price:"900",
+      image:"z24.jpg",
+    },
+    {
+      name:"University Sort It Out",
+      price:"100",
+      image:"z25.jpg",
+    },
+    {
+      name:"Ravensburger 121250 72 pieces",
+      price:"1000",
+      image:"z26.jpg",
+    },
+    {
+      name:"Sunta ABC Puzzle Fun in Circle",
+      price:"2000",
+      image:"z27.jpg",
+    },
+    {
+      name:"Skillofun Wooden Theme Puzzle",
+      price:"950",
+      image:"z28.jpg",
+    },
+    {
+      name:"Skillofun Wooden Theme Puzzle Standard Teddy Bear ",
+      price:"200",
+      image:"z29.jpg"
+    },
+    {
+      name:"Melissa & Doug 730 Pets Sound Puzzle",
+      price:"500",
+      image:"z30.jpg",
+    },
+    {
+      name:"Funskool-Handycrafts Pot Mania",
+      price:"4000",
+      image:"z31.jpg",
+    },
+    {
+      name:"Skillofun Wooden Theme Puzzle Standard Ship Knobs",
+      price:"300",
+      image:"z32.jpg",
+    },
+    {
+      name:"Novo Baby Colorful Wooden Puzzle Set Featuring",
+      price:"800",
+      image:"z33.jpg",
+    }
+
   ];
 
   // Handle "Buy Now" button click
@@ -43,7 +119,13 @@ const Toys4to8 = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (formData.name && formData.address && formData.pincode && formData.paymentMethod && formData.mobileNumber) {
+    if (
+      formData.name &&
+      formData.address &&
+      formData.pincode &&
+      formData.paymentMethod &&
+      formData.mobileNumber
+    ) {
       setShowAdd(false); // Close the form modal
       setShowConfirmation(true); // Show the confirmation message
     } else {
@@ -73,17 +155,16 @@ const Toys4to8 = () => {
             className="bg-white rounded-lg shadow-lg overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-2xl"
           >
             <img
-              src={`path/to/images/${toy.image}`} // Replace with the correct image path
+              src={`/${toy.image}`} // Corrected path for images in the public folder
               alt={toy.name}
               className="w-full h-40 object-cover"
             />
             <div className="p-4">
               <h2 className="text-lg font-semibold text-gray-800">{toy.name}</h2>
               <p className="text-xl text-purple-600 font-bold mb-4">
-                <span className="text-3xl">₹</span>
+                <span className="text-lg">₹</span> {/* Decreased size of rupee symbol */}
                 {toy.price}
               </p>
-              {/* Buy Now Button */}
               <button
                 onClick={() => handleBuyNow(toy)}
                 className="w-full mt-4 py-2 bg-gradient-to-br from-purple-500 to-purple-700 text-white text-lg font-semibold rounded-lg hover:bg-gradient-to-br hover:from-purple-600 hover:to-purple-800 active:scale-95 transition-all duration-300 shadow-md hover:shadow-xl"
@@ -95,13 +176,12 @@ const Toys4to8 = () => {
         ))}
       </div>
 
-      {/* Modal for address, pincode, payment method, mobile number, and name */}
+      {/* Modal for user details */}
       {showAdd && (
         <div className="absolute top-0 left-0 z-50 h-screen w-screen flex justify-center items-center bg-black/40">
           <div className="w-1/3 bg-white rounded-lg p-6 shadow-lg">
             <h2 className="text-xl font-semibold mb-4">Enter your details</h2>
             <form onSubmit={handleSubmit}>
-              {/* Name Field */}
               <div className="mb-4">
                 <label className="block text-gray-700">Name:</label>
                 <input
@@ -186,7 +266,7 @@ const Toys4to8 = () => {
               Your order will be dispatched soon. Thank you for shopping with us!
             </p>
             <button
-              onClick={() => setShowConfirmation(false)} // Close confirmation
+              onClick={() => setShowConfirmation(false)}
               className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md"
             >
               Close

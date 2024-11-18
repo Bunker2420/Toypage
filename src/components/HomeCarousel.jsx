@@ -4,8 +4,8 @@ const HomeCarousel = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const slides = [
     {
-      img: "https://static.vecteezy.com/system/resources/thumbnails/028/535/140/small/many-colorful-toys-collection-on-the-desk-generative-ai-photo.jpg",
-      title: "Toys",
+      img: "https://wallpaperaccess.com/full/4509437.jpg",
+      title: "Teddy Bears",
       offer: "40% offer",
     },
     {
@@ -14,8 +14,8 @@ const HomeCarousel = () => {
       offer: "30% offer",
     },
     {
-      img: "https://www.hdwallpapers.in/download/different_types_of_teddy_bear_toys_hd_teddy_bear-1920x1080.jpg",
-      title: "Teddy Bears",
+      img: "/image.jpg",
+      title: "100 +  products available",
       offer: "50% offer",
     },
   ];

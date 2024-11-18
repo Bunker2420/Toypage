@@ -12,15 +12,18 @@ const AdminDashboard = () => {
 
   const fetchData = async () => {
     try {
-      const userresponse = await getUsersCount();
+      const [userresponse, productresponse, orderresponse] = await Promise.all([
+        getUsersCount(),
+        getProductsCount(),
+        getOrdersCount(),
+      ]);
+
       if (userresponse.status === 200) {
         setUsers(userresponse.data.count);
       }
-      const productresponse = await getProductsCount();
       if (productresponse.status === 200) {
         setProducts(productresponse.data.count);
       }
-      const orderresponse = await getOrdersCount();
       if (orderresponse.status === 200) {
         setOrders(orderresponse.data.count);
       }
@@ -69,7 +72,7 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        {/* Cards with smooth hover animations */}
+        {/* Additional Card Component */}
         <div className="w-full flex justify-center items-center mt-8">
           <AdminDashboardHomeCards products={products} orders={orders} users={users} />
         </div>

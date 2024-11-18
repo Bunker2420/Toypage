@@ -2,9 +2,9 @@ import React, { useState } from "react";
 
 const Toys9to12 = () => {
   const [showAdd, setShowAdd] = useState(false);
-  const [showConfirmation, setShowConfirmation] = useState(false); // State for confirmation message
+  const [showConfirmation, setShowConfirmation] = useState(false);
   const [formData, setFormData] = useState({
-    name: "",        // Added name field
+    name: "",
     address: "",
     pincode: "",
     paymentMethod: "",
@@ -16,42 +16,114 @@ const Toys9to12 = () => {
     {
       name: "Remote Control Car",
       price: "2500",
-      image: "remote-control-car.jpg",
+      image: "/remote-control-car.jpg", // Path from public directory
     },
     {
       name: "Puzzle Set",
       price: "1200",
-      image: "puzzle-set.jpg",
+      image: "/puzzle-set.jpg", // Path from public directory
     },
     {
       name: "Board Game",
       price: "1500",
-      image: "board-game.jpg",
+      image: "/image.webp", // Path from public directory
     },
+    {
+      name:"Smartivity Microscope 100x Zoom Toy",
+      price:"900",
+      image:"z34.jpg",
+    },
+    {
+      name:"Smartivity Pinball Machine",
+      price:"2000",
+      image:"z35.jpg",
+    },
+    {
+      name:"Smartivity Telescope Toy",
+      price:"200",
+      image:"z36,jpg",
+    },
+    {
+      name:"Smartivity Robotic Mechanical Hand Toy ",
+      price:"500",
+      image:"z37.jpg",
+    },
+    {
+      name:"Funskool Games, Othello, Strategy Game, 2 players",
+      price:"500",
+      image:"z38.jpg",
+    },
+    {
+      name:"MONOPOLY Board Game (Multicolor) for Families and Kids ",
+      price:"2000",
+      image:"z39.jpg",
+    },
+    {
+      name:"Hasbro Gaming Mastermind The Classic Code Cracking Game",
+      price:"5000",
+      image:"z40.jpg",
+    },
+    {
+      name:"LEGO Speed Champions Mercedes",
+      price:"5000",
+      image:"z41.jpg",
+    },
+    {
+      name:"LEGO Technic Bugatti Bolide",
+      price:"1000",
+      image:"z42.jpg",
+    },
+    {
+      name:"LEGO Speed Champions 2",
+      price:"1000",
+      image:"z43.jpg",
+    },
+    {
+      name:"TRANSFORMERS (Bumblebee)",
+      price:"500",
+      image:"z44.jpg",
+    },
+    {
+      name:"Avishkaar Robotics Starter Kit",
+      price:"200",
+      image:"z45.jpg",
+    },
+    {
+      name:"ack Royal Original Rock Crawler",
+      price:"500",
+      image:"z46.jpg",
+    },
+    {
+      name:"LEGO Creator 3in1 Fish Tank ",
+      price:"500",
+      image:"z47.jpg",
+    }
   ];
 
-  // Handle "Buy Now" button click
   const handleBuyNow = (toy) => {
     setFormData({
       ...formData,
       toy,
     });
-    setShowAdd(true); // Show the form modal
+    setShowAdd(true);
   };
 
-  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    if (formData.name && formData.address && formData.pincode && formData.paymentMethod && formData.mobileNumber) {
-      setShowAdd(false); // Close the form modal
-      setShowConfirmation(true); // Show the confirmation message
+    if (
+      formData.name &&
+      formData.address &&
+      formData.pincode &&
+      formData.paymentMethod &&
+      formData.mobileNumber
+    ) {
+      setShowAdd(false);
+      setShowConfirmation(true);
     } else {
       alert("Please provide all the required details.");
     }
   };
 
-  // Handle input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -65,7 +137,9 @@ const Toys9to12 = () => {
       <h1 className="text-3xl font-semibold mb-6 text-white drop-shadow-lg">
         Toys for 9 to 12 Years
       </h1>
-      <p className="text-lg mb-4 text-white">Toys for older children in this age range.</p>
+      <p className="text-lg mb-4 text-white">
+        Toys for older children in this age range.
+      </p>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {toys.map((toy, index) => (
           <div
@@ -73,17 +147,18 @@ const Toys9to12 = () => {
             className="bg-white rounded-lg shadow-lg overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-2xl"
           >
             <img
-              src={`path/to/images/${toy.image}`} // Replace with the correct image path
+              src={toy.image} // Accessing image from public
               alt={toy.name}
               className="w-full h-40 object-cover"
             />
             <div className="p-4">
-              <h2 className="text-lg font-semibold text-gray-800">{toy.name}</h2>
+              <h2 className="text-lg font-semibold text-gray-800">
+                {toy.name}
+              </h2>
               <p className="text-xl text-purple-600 font-bold mb-4">
-                <span className="text-3xl">₹</span>
+                <span className="text-xl">₹</span> {/* Reduced size of the rupee symbol */}
                 {toy.price}
               </p>
-              {/* Buy Now Button */}
               <button
                 onClick={() => handleBuyNow(toy)}
                 className="w-full mt-4 py-2 bg-gradient-to-br from-purple-500 to-purple-700 text-white text-lg font-semibold rounded-lg hover:bg-gradient-to-br hover:from-purple-600 hover:to-purple-800 active:scale-95 transition-all duration-300 shadow-md hover:shadow-xl"
@@ -94,14 +169,11 @@ const Toys9to12 = () => {
           </div>
         ))}
       </div>
-
-      {/* Modal for name, address, pincode, payment method, and mobile number */}
       {showAdd && (
         <div className="absolute top-0 left-0 z-50 h-screen w-screen flex justify-center items-center bg-black/40">
           <div className="w-1/3 bg-white rounded-lg p-6 shadow-lg">
             <h2 className="text-xl font-semibold mb-4">Enter your details</h2>
             <form onSubmit={handleSubmit}>
-              {/* Name Field */}
               <div className="mb-4">
                 <label className="block text-gray-700">Name:</label>
                 <input
@@ -176,17 +248,18 @@ const Toys9to12 = () => {
           </div>
         </div>
       )}
-
-      {/* Confirmation message */}
       {showConfirmation && (
         <div className="absolute top-0 left-0 z-50 h-screen w-screen flex justify-center items-center bg-black/40">
           <div className="w-1/3 bg-white rounded-lg p-6 shadow-lg text-center">
-            <h2 className="text-2xl font-semibold mb-4">We've noticed your order!</h2>
+            <h2 className="text-2xl font-semibold mb-4">
+              We've noticed your order!
+            </h2>
             <p className="text-lg text-gray-700">
-              Your order will be dispatched soon. Thank you for shopping with us!
+              Your order will be dispatched soon. Thank you for shopping with
+              us!
             </p>
             <button
-              onClick={() => setShowConfirmation(false)} // Close confirmation
+              onClick={() => setShowConfirmation(false)}
               className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md"
             >
               Close

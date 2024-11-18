@@ -115,9 +115,7 @@ const Products = () => {
           filteredProducts.map((product, index) => (
             <div
               key={product._id}
-              className={`w-72 h-[28rem] ${
-                searchTerm ? "w-60 h-[24rem]" : ""
-              } bg-white rounded-lg shadow-lg p-4 flex flex-col items-center justify-between hover:scale-105 hover:shadow-2xl transform transition-all duration-300`}
+              className={`w-72 h-[28rem] ${searchTerm ? "w-60 h-[24rem]" : ""} bg-white rounded-lg shadow-lg p-4 flex flex-col items-center justify-between hover:scale-105 hover:shadow-2xl transform transition-all duration-300`}
             >
               {/* Animated Product Image */}
               <div className="w-full h-40 overflow-hidden rounded-lg mb-4 group">
@@ -137,7 +135,7 @@ const Products = () => {
                   {product.description || "No description available"}
                 </p>
                 <p className="text-purple-500 font-bold text-lg">
-                  ${product.price}
+                  ₹{product.price}
                 </p>
               </div>
 
@@ -248,9 +246,7 @@ const Products = () => {
         <div className="absolute top-0 left-0 z-50 h-screen w-screen flex justify-center items-center bg-black/40">
           <div className="w-1/3 bg-white rounded-lg p-6 shadow-lg">
             <h2 className="text-xl font-semibold">Thank you for your order!</h2>
-            <p className="text-gray-700 mt-4">
-              We will process your order soon. The details have been sent to your mobile number.
-            </p>
+            <p className="mt-4">Your order has been successfully placed.</p>
             <button
               onClick={() => setShowConfirmation(false)}
               className="bg-green-500 text-white py-2 px-4 rounded-md mt-4"

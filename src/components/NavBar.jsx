@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 const Navbar = () => {
     const Linksdata = [
         { title: 'Home', path: '/home', color: 'text-cyan-400' }, // Default color before hovering
-        { title: 'Products', path: '/products', color: 'text-green-500' },
+        { title: 'ToysPage', path: '/products', color: 'text-green-500' },
         { title: 'Contact', path: '/contact', color: 'text-blue-500' }
     ];
 
