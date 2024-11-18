@@ -1,0 +1,60 @@
+/* components/SignUp.css */
+.body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: url('/try 4.webp') no-repeat;
+    background-size: cover;
+    background-position: center center;
+  }
+  
+  .Wrapper {
+    width: 500px;
+    background: transparent;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    color: #fff;
+    border-radius: 10px;
+    padding: 30px 40px;
+  }
+  
+  .p-design {
+    font-size: 15px;
+    margin-top: 0px;
+  }
+  
+  .Hello {
+    margin-left: 148px;
+  }
+  
+  .Hello1 {
+    margin-left: 125px;
+  }
+  
+  .search {
+    margin-top: 15px;
+    margin-bottom: 25px;
+    width: 250px;
+    height: 30px;
+    border-radius: 180px;
+    border-width: 1px;
+    padding-left: 45px;
+    border-color: gray;
+    margin-left: 78px;
+  }
+  
+  .search:hover {
+    border-color: gray;
+  }
+  
+  .buttoon {
+    width: 200px;
+    height: 40px;
+    border-radius: 180px;
+    border-width: 0px;
+    cursor: pointer;
+    margin-left: 100px;
+    margin-top: 15px;
+  }
