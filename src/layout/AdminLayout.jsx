@@ -41,15 +41,15 @@ const AdminLayout = () => {
     }
 
     return (
-        <div className="w-screen h-screen flex flex-row">
-            <div className="w-[18vw] h-full">
+        <div className="w-screen h-screen flex flex-row bg-gradient-to-r from-teal-400 via-purple-500 to-pink-500">
+            <div className="w-[18vw] h-full bg-gradient-to-b from-purple-600 to-pink-700">
                 <AdminLeftBar />
             </div>
-            <div className="w-[82vw] h-full flex flex-col">
-                <div className="h-[3rem]">
+            <div className="w-[82vw] h-full flex flex-col bg-gray-50">
+                <div className="h-[3rem] bg-gradient-to-r from-pink-500 to-teal-500 shadow-md text-white flex justify-between items-center px-4">
                     <AdminTopBar />
                 </div>
-                <div className="flex-1 overflow-auto">
+                <div className="flex-1 overflow-auto p-4 bg-gray-200">
                     <Outlet />
                 </div>
             </div>

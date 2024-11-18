@@ -1,62 +1,68 @@
-import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
-import { Carousel } from 'react-responsive-carousel';
+import { useState, useEffect } from 'react';
 
 const HomeCarousel = () => {
-  return (
-    <>
-      <Carousel 
-        autoPlay 
-        infiniteLoop 
-        showThumbs={false} 
-        showStatus={false}
-        className="relative"
-      >
-        <div>
-          <img 
-            className="h-[50vh] object-cover rounded-lg shadow-md" 
-            src="https://static.vecteezy.com/system/resources/thumbnails/028/535/140/small/many-colorful-toys-collection-on-the-desk-generative-ai-photo.jpg" 
-            alt="Toys"
-          />
-          <div className="absolute left-2 bottom-2 flex flex-col bg-white bg-opacity-80 p-6 rounded-lg shadow-xl">
-            <h2 className="text-3xl font-semibold text-gray-800">Toys</h2>
-            <p className="text-xl mt-4">
-              <span className="text-4xl font-bold text-blue-600">40%</span>
-              <span className="text-base font-medium text-gray-500"> offer</span>
-            </p>
-          </div>
-        </div>
-        
-        <div>
-          <img 
-            className="h-[50vh] object-cover rounded-lg shadow-md" 
-            src="https://thumbs.dreamstime.com/b/toy-store-wooden-shelves-full-colorful-toys-sale-wooden-shelves-stocked-colorful-toys-toy-store-324130046.jpg" 
-            alt="Store"
-          />
-          <div className="absolute left-2 bottom-2 flex flex-col bg-white bg-opacity-80 p-6 rounded-lg shadow-xl">
-            <h2 className="text-3xl font-semibold text-gray-800">Store</h2>
-            <p className="text-xl mt-4">
-              <span className="text-4xl font-bold text-blue-600">30%</span>
-              <span className="text-base font-medium text-gray-500"> offer</span>
-            </p>
-          </div>
-        </div>
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const slides = [
+    {
+      img: "https://static.vecteezy.com/system/resources/thumbnails/028/535/140/small/many-colorful-toys-collection-on-the-desk-generative-ai-photo.jpg",
+      title: "Toys",
+      offer: "40% offer",
+    },
+    {
+      img: "https://thumbs.dreamstime.com/b/toy-store-wooden-shelves-full-colorful-toys-sale-wooden-shelves-stocked-colorful-toys-toy-store-324130046.jpg",
+      title: "Store",
+      offer: "30% offer",
+    },
+    {
+      img: "https://www.hdwallpapers.in/download/different_types_of_teddy_bear_toys_hd_teddy_bear-1920x1080.jpg",
+      title: "Teddy Bears",
+      offer: "50% offer",
+    },
+  ];
 
-        <div>
-          <img 
-            className="h-[50vh] object-cover rounded-lg shadow-md" 
-            src="https://www.hdwallpapers.in/download/different_types_of_teddy_bear_toys_hd_teddy_bear-1920x1080.jpg" 
-            alt="Teddy Bears"
-          />
-          <div className="absolute left-2 bottom-2 flex flex-col bg-white bg-opacity-80 p-6 rounded-lg shadow-xl">
-            <h2 className="text-3xl font-semibold text-gray-800">Teddy Bears</h2>
-            <p className="text-xl mt-4">
-              <span className="text-4xl font-bold text-blue-600">50%</span>
-              <span className="text-base font-medium text-gray-500"> offer</span>
-            </p>
+  // Auto-slide logic
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    }, 4000); // Change slide every 4 seconds
+    return () => clearInterval(timer);
+  }, [slides.length]);
+
+  return (
+    <div className="relative w-screen h-[60vh] overflow-hidden">
+      {slides.map((slide, index) => (
+        <div
+          key={index}
+          className={`absolute inset-0 transition-all duration-1000 ${
+            index === currentSlide ? "opacity-100 scale-100" : "opacity-0 scale-95"
+          }`}
+          style={{
+            backgroundImage: `url(${slide.img})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/70" />
+          <div className="absolute bottom-10 left-10 text-white">
+            <h2 className="text-4xl font-bold drop-shadow-md">{slide.title}</h2>
+            <p className="text-2xl mt-2 font-semibold drop-shadow-md">{slide.offer}</p>
           </div>
         </div>
-      </Carousel>
-    </>
+      ))}
+
+      {/* Navigation Dots */}
+      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2">
+        {slides.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => setCurrentSlide(index)}
+            className={`w-3 h-3 rounded-full transition ${
+              index === currentSlide ? "bg-white" : "bg-gray-500"
+            }`}
+          />
+        ))}
+      </div>
+    </div>
   );
 };
 
