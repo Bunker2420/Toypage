@@ -16,7 +16,7 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: url('/image.webp') no-repeat center center/cover;
+    background: url('../public/a25.jpeg') no-repeat center center/cover;
     animation: backgroundAnimation 15s infinite alternate;
 }
 

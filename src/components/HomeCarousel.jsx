@@ -15,7 +15,7 @@ const HomeCarousel = () => {
     },
     {
       img: "/image.jpg",
-      title: "100 +  products available",
+      title: "50 +  products available",
       offer: "50% offer",
     },
   ];

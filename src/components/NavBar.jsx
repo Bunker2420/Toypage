@@ -15,8 +15,15 @@ const Navbar = () => {
                 {/* Navbar Section */}
                 <div className="w-full h-16 flex flex-row justify-between items-center px-6">
                     {/* Logo with Hover Effect */}
-                    <div className="text-white font-bold text-3xl transition-all duration-300 transform hover:scale-110 hover:text-pink-300 cursor-pointer">
-                        Toys Store
+                    <div className="flex items-center gap-3">
+                        <img 
+                            src="/logo.jpg" // Replace with the correct path to your logo image
+                            alt="Logo" 
+                            className="h-10 w-10 object-contain" // Adjust size of the logo as needed
+                        />
+                        <div className="text-white font-bold text-3xl transition-all duration-300 transform hover:scale-110 hover:text-pink-300 cursor-pointer">
+                            Toys Store
+                        </div>
                     </div>
 
                     {/* Navigation Links with Advanced Hover Effects */}

@@ -5,7 +5,7 @@ import { getUsers, addUser, editUser, deleteUser, resetPassword } from '../../ap
 import { toast } from 'sonner';
 
 const AdminUsers = () => {
-  const [users, setUsers] = useState(null);
+  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState(null);
   const [showAdd, setShowAdd] = useState(false);
@@ -13,10 +13,11 @@ const AdminUsers = () => {
   const [showReset, setShowReset] = useState(false);
   const nameRef = useRef('');
   const emailRef = useRef('');
-  const phoneRef = useRef(0);
+  const phoneRef = useRef('');
   const passwordRef = useRef('');
   const roleRef = useRef('');
 
+  // Fetch Users from API
   const fetchData = async () => {
     try {
       const res = await getUsers();
@@ -24,12 +25,18 @@ const AdminUsers = () => {
         setUsers(res.data);
       }
     } catch (error) {
-      console.error(error);
+      console.error('Error fetching users:', error);
+      toast.error('Failed to load users.');
     } finally {
       setLoading(false);
     }
   };
 
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  // Handle Add User
   const handleAdd = async (e) => {
     e.preventDefault();
     const user = {
@@ -48,10 +55,10 @@ const AdminUsers = () => {
       }
     } catch (error) {
       toast.error('Error while Adding');
-      console.error(error);
     }
   };
 
+  // Handle Edit User
   const editHelper = (user) => {
     setCurrentUser(user);
     setShowEdit(true);
@@ -68,15 +75,16 @@ const AdminUsers = () => {
     try {
       const response = await editUser(user, currentUser._id);
       if (response.status === 200) {
-        setShowEdit(!showEdit);
+        toast.info('User Updated!');
+        setShowEdit(false);
         fetchData();
-        toast.info('User Updated !');
       }
     } catch (error) {
       toast.error('Error while Updating');
     }
   };
 
+  // Handle Reset Password
   const resetHelper = (user) => {
     setCurrentUser(user);
     setShowReset(true);
@@ -87,14 +95,15 @@ const AdminUsers = () => {
     try {
       const response = await resetPassword({ password: passwordRef.current.value }, currentUser._id);
       if (response.status === 200) {
-        setShowReset(!showReset);
-        toast.warning('User Password Updated !');
+        toast.warning('User Password Updated!');
+        setShowReset(false);
       }
     } catch (error) {
       toast.error('Error while Updating');
     }
   };
 
+  // Handle Delete User
   const handleDelete = async (id) => {
     try {
       const response = await deleteUser(id);
@@ -103,13 +112,9 @@ const AdminUsers = () => {
         fetchData();
       }
     } catch (error) {
-      console.error(error);
+      toast.error('Error while Deleting');
     }
   };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
 
   if (loading) {
     return (
@@ -119,7 +124,7 @@ const AdminUsers = () => {
     );
   }
 
-  if (!users || users.length === 0) {
+  if (!users.length) {
     return (
       <div className='w-screen h-[90vh] flex flex-col justify-center items-center'>
         <TriangleAlert className='text-orange-400 h-12 w-12' />
@@ -134,7 +139,8 @@ const AdminUsers = () => {
         <AdminPageHeader title='Users' />
         <button
           className='w-10 h-10 font-bold flex justify-center items-center border-2 border-green-500 rounded-md text-green-500 shadow-md hover:text-white hover:bg-green-500 hover:shadow-lg transition-all duration-300'
-          onClick={() => setShowAdd(!showAdd)}>
+          onClick={() => setShowAdd(!showAdd)}
+        >
           <Plus className='w-8 h-8' />
         </button>
       </div>
@@ -150,8 +156,8 @@ const AdminUsers = () => {
           </tr>
         </thead>
         <tbody>
-          {users.map((user, index) => (
-            <tr key={index} className='transition-all duration-300 hover:bg-gray-100'>
+          {users.map((user) => (
+            <tr key={user._id} className='transition-all duration-300 hover:bg-gray-100'>
               <td className='p-4'>{user._id}</td>
               <td className='p-4'>{user.name}</td>
               <td className='p-4'>{user.role}</td>
@@ -160,17 +166,20 @@ const AdminUsers = () => {
               <td className='p-4 flex gap-4'>
                 <button
                   className='p-2 rounded-md text-blue-500 border-2 border-blue-500 hover:bg-blue-500 hover:text-white transition-all duration-300'
-                  onClick={() => editHelper(user)}>
+                  onClick={() => editHelper(user)}
+                >
                   <Pencil />
                 </button>
                 <button
                   className='p-2 rounded-md text-orange-500 border-2 border-orange-500 hover:bg-orange-500 hover:text-white transition-all duration-300'
-                  onClick={() => resetHelper(user)}>
+                  onClick={() => resetHelper(user)}
+                >
                   <Key />
                 </button>
                 <button
                   className='p-2 rounded-md text-red-500 border-2 border-red-500 hover:bg-red-500 hover:text-white transition-all duration-300'
-                  onClick={() => handleDelete(user._id)}>
+                  onClick={() => handleDelete(user._id)}
+                >
                   <Trash />
                 </button>
               </td>
@@ -187,27 +196,30 @@ const AdminUsers = () => {
               <h1 className='text-xl font-bold text-green-500'>Add User</h1>
               <div
                 className='text-red-500 cursor-pointer'
-                onClick={() => setShowAdd(false)}>
+                onClick={() => setShowAdd(false)}
+              >
                 <X className='h-8 w-8 border-2 p-1 border-red-500 rounded-full hover:bg-red-500 hover:text-white' />
               </div>
             </div>
             <form className='flex flex-col items-center gap-8' onSubmit={handleAdd}>
               <input ref={nameRef} type='text' placeholder='Name' className='w-full p-4 bg-[#f5f5f7] border-b-2 focus:border-green-400 rounded-sm shadow-md' required autoFocus />
               <input ref={emailRef} type='email' placeholder='Email' className='w-full p-4 bg-[#f5f5f7] border-b-2 focus:border-green-400 rounded-sm shadow-md' required />
-              <input ref={phoneRef} type='number' placeholder='Phone' className='w-full p-4 bg-[#f5f5f7] border-b-2 focus:border-green-400 rounded-sm shadow-md' required />
+              <input ref={phoneRef} type='tel' placeholder='Phone' className='w-full p-4 bg-[#f5f5f7] border-b-2 focus:border-green-400 rounded-sm shadow-md' required />
               <input ref={passwordRef} type='password' placeholder='Password' className='w-full p-4 bg-[#f5f5f7] border-b-2 focus:border-green-400 rounded-sm shadow-md' required />
-              <select ref={roleRef} className='w-full p-4 bg-[#f5f5f7] border-b-2 focus:border-green-400 rounded-sm shadow-md'>
-                <option value='ADMIN'>Admin</option>
+              <select ref={roleRef} className='w-full p-4 bg-[#f5f5f7] border-b-2 focus:border-green-400 rounded-sm shadow-md' required>
                 <option value='USER'>User</option>
+                <option value='ADMIN'>Admin</option>
               </select>
-              <button type='submit' className='w-full h-12 bg-green-500 text-white rounded-lg shadow-lg mt-4 transition-all duration-300 hover:bg-green-600'>
+              <button
+                type='submit'
+                className='px-4 py-2 bg-green-500 text-white w-full rounded-md hover:bg-green-600 transition-all duration-300'
+              >
                 Add User
               </button>
             </form>
           </div>
         </div>
       )}
-
       {/* Edit User Modal */}
       {showEdit && (
         <div className='absolute top-0 left-0 z-50 h-screen w-screen flex justify-center items-center bg-black/40'>
@@ -216,45 +228,48 @@ const AdminUsers = () => {
               <h1 className='text-xl font-bold text-blue-500'>Edit User</h1>
               <div
                 className='text-red-500 cursor-pointer'
-                onClick={() => setShowEdit(false)}>
+                onClick={() => setShowEdit(false)}
+              >
                 <X className='h-8 w-8 border-2 p-1 border-red-500 rounded-full hover:bg-red-500 hover:text-white' />
               </div>
             </div>
             <form className='flex flex-col items-center gap-8' onSubmit={handleEdit}>
-              <input ref={nameRef} type='text' defaultValue={currentUser?.name} className='w-full p-4 bg-[#f5f5f7] border-b-2 focus:border-blue-400 rounded-sm shadow-md' required />
-              <input ref={emailRef} type='email' defaultValue={currentUser?.email} className='w-full p-4 bg-[#f5f5f7] border-b-2 focus:border-blue-400 rounded-sm shadow-md' required />
-              <input ref={phoneRef} type='number' defaultValue={currentUser?.phone} className='w-full p-4 bg-[#f5f5f7] border-b-2 focus:border-blue-400 rounded-sm shadow-md' required />
-              <select ref={roleRef} className='w-full p-4 bg-[#f5f5f7] border-b-2 focus:border-blue-400 rounded-sm shadow-md'>
-                <option value='ADMIN' selected={currentUser?.role === 'ADMIN'}>
-                  Admin
-                </option>
-                <option value='USER' selected={currentUser?.role === 'USER'}>
-                  User
-                </option>
+              <input ref={nameRef} type='text' placeholder='Name' defaultValue={currentUser?.name} className='w-full p-4 bg-[#f5f5f7] border-b-2 focus:border-blue-400 rounded-sm shadow-md' required />
+              <input ref={emailRef} type='email' placeholder='Email' defaultValue={currentUser?.email} className='w-full p-4 bg-[#f5f5f7] border-b-2 focus:border-blue-400 rounded-sm shadow-md' required />
+              <input ref={phoneRef} type='tel' placeholder='Phone' defaultValue={currentUser?.phone} className='w-full p-4 bg-[#f5f5f7] border-b-2 focus:border-blue-400 rounded-sm shadow-md' required />
+              <select ref={roleRef} defaultValue={currentUser?.role} className='w-full p-4 bg-[#f5f5f7] border-b-2 focus:border-blue-400 rounded-sm shadow-md' required>
+                <option value='USER'>User</option>
+                <option value='ADMIN'>Admin</option>
               </select>
-              <button type='submit' className='w-full h-12 bg-blue-500 text-white rounded-lg shadow-lg mt-4 transition-all duration-300 hover:bg-blue-600'>
-                Save Changes
+              <button
+                type='submit'
+                className='px-4 py-2 bg-blue-500 text-white w-full rounded-md hover:bg-blue-600 transition-all duration-300'
+              >
+                Edit User
               </button>
             </form>
           </div>
         </div>
       )}
-
       {/* Reset Password Modal */}
       {showReset && (
         <div className='absolute top-0 left-0 z-50 h-screen w-screen flex justify-center items-center bg-black/40'>
           <div className='h-[75%] w-1/3 flex flex-col justify-center items-center bg-white shadow-2xl rounded-md'>
             <div className='w-full flex justify-between items-center px-4'>
-              <h1 className='text-xl font-bold text-orange-500'>Reset Password</h1>
+              <h1 className='text-xl font-bold text-red-500'>Reset Password</h1>
               <div
                 className='text-red-500 cursor-pointer'
-                onClick={() => setShowReset(false)}>
+                onClick={() => setShowReset(false)}
+              >
                 <X className='h-8 w-8 border-2 p-1 border-red-500 rounded-full hover:bg-red-500 hover:text-white' />
               </div>
             </div>
             <form className='flex flex-col items-center gap-8' onSubmit={handleReset}>
-              <input ref={passwordRef} type='password' placeholder='New Password' className='w-full p-4 bg-[#f5f5f7] border-b-2 focus:border-orange-400 rounded-sm shadow-md' required />
-              <button type='submit' className='w-full h-12 bg-orange-500 text-white rounded-lg shadow-lg mt-4 transition-all duration-300 hover:bg-orange-600'>
+              <input ref={passwordRef} type='password' placeholder='New Password' className='w-full p-4 bg-[#f5f5f7] border-b-2 focus:border-red-400 rounded-sm shadow-md' required />
+              <button
+                type='submit'
+                className='px-4 py-2 bg-red-500 text-white w-full rounded-md hover:bg-red-600 transition-all duration-300'
+              >
                 Reset Password
               </button>
             </form>

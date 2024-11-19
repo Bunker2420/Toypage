@@ -77,3 +77,46 @@ select {
  .select:hover::after {
     color: #23b499;
  }
+ @keyframes likeAnimation {
+   0% {
+     transform: scale(1);
+     color: red;
+   }
+   50% {
+     transform: scale(1.2);
+     color: #ff4d4d;
+   }
+   100% {
+     transform: scale(1);
+     color: red;
+   }
+ }
+ 
+ @keyframes likeHoverAnimation {
+   0% {
+     transform: scale(1);
+   }
+   50% {
+     transform: scale(1.1);
+   }
+   100% {
+     transform: scale(1);
+   }
+ }
+ 
+ .like-button {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   cursor: pointer;
+   transition: transform 0.3s ease-in-out;
+ }
+ 
+ .like-button.animate-like {
+   animation: likeAnimation 0.5s ease-in-out;
+ }
+ 
+ .like-button.animate-like-hover {
+   animation: likeHoverAnimation 0.5s ease-in-out;
+ }
+ 

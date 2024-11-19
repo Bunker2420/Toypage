@@ -1,29 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { getProducts } from "../api/api";
-import { Loader2, TriangleAlert, Search } from "lucide-react";
+import { Loader2, TriangleAlert, Search, Heart, Share2 } from "lucide-react";
 
 const Products = () => {
   const [products, setProducts] = useState(null);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [showAdd, setShowAdd] = useState(false);
-  const [showConfirmation, setShowConfirmation] = useState(false);
-  const [formData, setFormData] = useState({
+  const [isModalOpen, setIsModalOpen] = useState(false); // Modal visibility
+  const [showAdd, setShowAdd] = useState(false); // Show order form
+  const [orderDetails, setOrderDetails] = useState({
     name: "",
     address: "",
-    pincode: "",
-    paymentMethod: "",
-    mobileNumber: "",
-    product: null,
+    mobile: "",
+    paymentOption: "",
   });
+  const [orderSubmitted, setOrderSubmitted] = useState(false); // Track order submission
+  const [orderMessage, setOrderMessage] = useState(""); // Message after order submission
+  const [isLikeHovered, setIsLikeHovered] = useState(false); // Track hover state for the like button animation
 
+  // Fetch product data
   async function fetchData() {
     try {
       const res = await getProducts();
       if (res.status === 200) {
         setProducts(res.data);
-        setFilteredProducts(res.data); // Initialize filtered products
+        setFilteredProducts(res.data);
       }
     } catch (error) {
       console.log(error);
@@ -36,6 +38,7 @@ const Products = () => {
     fetchData();
   }, []);
 
+  // Handle search input
   const handleSearch = (e) => {
     const value = e.target.value.toLowerCase();
     setSearchTerm(value);
@@ -46,31 +49,86 @@ const Products = () => {
     setFilteredProducts(filtered);
   };
 
-  const handleBuyNow = (product) => {
-    setFormData({
-      ...formData,
-      product,
-    });
-    setShowAdd(true); // Show the form modal
+  // Handle like button click
+  const handleLike = (e) => {
+    const icon = e.target.closest("button");
+    icon.classList.add("animate-like"); // Add animation class on click
+    setTimeout(() => icon.classList.remove("animate-like"), 500); // Remove animation class after 500ms
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  // Handle mouse enter/leave for like button hover animation
+  const handleLikeHover = (state) => {
+    setIsLikeHovered(state);
+  };
 
-    if (formData.name && formData.address && formData.pincode && formData.paymentMethod && formData.mobileNumber) {
-      setShowAdd(false); // Close the form modal
-      setShowConfirmation(true); // Show the confirmation message
-    } else {
-      alert("Please provide all the required details.");
+  // Handle "Buy Now" button click to show order form
+  const handleBuyNow = (product) => {
+    setIsModalOpen(true); // Open modal to enter details
+    setShowAdd(true); // Show the order form
+    setOrderSubmitted(false); // Reset order submission status
+    setOrderMessage(""); // Reset order message
+  };
+
+  // Handle form input change
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setOrderDetails({
+      ...orderDetails,
+      [name]: value,
+    });
+  };
+
+  // Handle payment option change (redirect on PhonePe or GPay selection)
+  const handlePaymentOptionChange = (e) => {
+    const selectedOption = e.target.value;
+    setOrderDetails({
+      ...orderDetails,
+      paymentOption: selectedOption,
+    });
+
+    if (selectedOption === "PhonePe") {
+      window.location.href = `https://www.phonepe.com/pay?number=7416842005`; 
+    } else if (selectedOption === "GPay") {
+      window.location.href = `https://pay.google.com/payments/u/0/about?number=7416842005`; 
     }
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+  // Handle form submission
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (orderDetails.paymentOption === "COD") {
+      setOrderSubmitted(true); // Set orderSubmitted to true to show the confirmation message
+      setOrderMessage("We have received your order, we will dispatch soon."); // Set the confirmation message
+      setShowAdd(false); // Hide the form after submission
+      setTimeout(() => {
+        setIsModalOpen(false); // Close the modal after a short delay to allow the message to be seen
+      }, 2000); // Adjust the time delay (2 seconds in this case)
+    } else {
+      // Handle other payment methods (PhonePe, GPay) as redirects already happen
+    }
+  };
+
+  // Handle sharing logic using Web Share API
+  const handleShare = (product) => {
+    if (navigator.share) {
+      navigator.share({
+        title: product.title,
+        text: product.description || "Check out this product!",
+        url: window.location.href,
+      })
+        .then(() => console.log("Shared successfully"))
+        .catch((error) => console.log("Error sharing", error));
+    } else {
+      const shareMessage = `Check out this product: ${product.title}\n${product.description}\n${window.location.href}`;
+
+      const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareMessage)}`;
+      const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`;
+      const instagramUrl = `https://www.instagram.com/?url=${encodeURIComponent(window.location.href)}`;
+
+      window.open(whatsappUrl, "_blank");
+      window.open(facebookUrl, "_blank");
+      window.open(instagramUrl, "_blank");
+    }
   };
 
   if (loading) {
@@ -86,9 +144,7 @@ const Products = () => {
     return (
       <div className="w-screen h-[90vh] flex flex-col justify-center items-center bg-gradient-to-br from-gray-100 to-gray-300">
         <TriangleAlert className="text-orange-400 h-12 w-12" />
-        <p className="text-gray-700 text-lg mt-2 font-semibold">
-          No Products Available!
-        </p>
+        <p className="text-gray-700 text-lg mt-2 font-semibold">No Products Available!</p>
       </div>
     );
   }
@@ -112,12 +168,12 @@ const Products = () => {
       {/* Product Grid */}
       <div className="w-full flex justify-center items-start flex-wrap gap-8">
         {filteredProducts.length > 0 ? (
-          filteredProducts.map((product, index) => (
+          filteredProducts.map((product) => (
             <div
               key={product._id}
-              className={`w-72 h-[28rem] ${searchTerm ? "w-60 h-[24rem]" : ""} bg-white rounded-lg shadow-lg p-4 flex flex-col items-center justify-between hover:scale-105 hover:shadow-2xl transform transition-all duration-300`}
+              className="w-72 h-[28rem] bg-white rounded-lg shadow-lg p-4 flex flex-col items-center justify-between transform hover:scale-105 hover:shadow-2xl hover:-rotate-1 transition-transform duration-300 group"
             >
-              {/* Animated Product Image */}
+              {/* Product Image */}
               <div className="w-full h-40 overflow-hidden rounded-lg mb-4 group">
                 <img
                   src={product.img}
@@ -128,131 +184,132 @@ const Products = () => {
 
               {/* Product Info */}
               <div className="w-full flex flex-col items-start">
-                <h1 className="text-lg font-bold text-gray-800 mb-2">
+                <h1 className="text-lg font-bold text-gray-800 mb-2 group-hover:text-purple-600 transition-colors duration-300">
                   {product.title}
                 </h1>
-                <p className="text-gray-600 text-sm mb-4 truncate">
+                <p className="text-gray-600 text-sm mb-4 truncate group-hover:text-gray-800 transition-colors duration-300">
                   {product.description || "No description available"}
                 </p>
-                <p className="text-purple-500 font-bold text-lg">
-                  ₹{product.price}
-                </p>
+                <div className="flex items-center justify-between w-full mb-4">
+                  <p className="text-purple-500 font-bold text-lg">
+                    ₹{product.price}
+                  </p>
+                  {/* Like and Share Buttons */}
+                  <div className="flex items-center gap-3">
+                    <button
+                      className={`like-button text-red-500 hover:text-red-600 relative ${isLikeHovered ? 'animate-like-hover' : ''}`}
+                      onClick={handleLike}
+                      onMouseEnter={() => handleLikeHover(true)}
+                      onMouseLeave={() => handleLikeHover(false)}
+                    >
+                      <Heart className="w-6 h-6" />
+                    </button>
+                    <button
+                      className="text-blue-500 hover:text-blue-600"
+                      onClick={() => handleShare(product)} // Share product when clicked
+                    >
+                      <Share2 className="w-6 h-6" />
+                    </button>
+                  </div>
+                </div>
+                <button
+                  onClick={() => handleBuyNow(product)} // Open modal for order form
+                  className="py-2 px-6 bg-purple-600 text-white font-semibold rounded-md w-full mt-auto"
+                >
+                  Buy Now
+                </button>
               </div>
-
-              {/* Buy Now Button */}
-              <button
-                className="w-full mt-4 py-2 bg-purple-600 text-white text-lg font-semibold rounded-lg hover:bg-purple-700 active:scale-95 transition-transform duration-300 shadow-md hover:shadow-lg"
-                onClick={() => handleBuyNow(product)}
-              >
-                Buy Now
-              </button>
             </div>
           ))
         ) : (
-          <div className="text-gray-700 font-semibold text-lg">
-            No products match your search!
-          </div>
+          <p className="text-gray-700">No products found matching your search.</p>
         )}
       </div>
 
-      {/* Modal for name, address, pincode, payment method, and mobile number */}
-      {showAdd && (
-        <div className="absolute top-0 left-0 z-50 h-screen w-screen flex justify-center items-center bg-black/40">
-          <div className="w-1/3 bg-white rounded-lg p-6 shadow-lg">
-            <h2 className="text-xl font-semibold mb-4">Enter your details</h2>
-            <form onSubmit={handleSubmit}>
-              {/* Name Field */}
-              <div className="mb-4">
-                <label className="block text-gray-700">Name:</label>
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  className="w-full p-2 border border-gray-300 rounded-md"
-                  required
-                />
-              </div>
-              {/* Address Field */}
-              <div className="mb-4">
-                <label className="block text-gray-700">Address:</label>
-                <input
-                  type="text"
-                  name="address"
-                  value={formData.address}
-                  onChange={handleInputChange}
-                  className="w-full p-2 border border-gray-300 rounded-md"
-                  required
-                />
-              </div>
-              {/* Pincode Field */}
-              <div className="mb-4">
-                <label className="block text-gray-700">Pincode:</label>
-                <input
-                  type="text"
-                  name="pincode"
-                  value={formData.pincode}
-                  onChange={handleInputChange}
-                  className="w-full p-2 border border-gray-300 rounded-md"
-                  required
-                />
-              </div>
-              {/* Payment Method Field */}
-              <div className="mb-4">
-                <label className="block text-gray-700">Payment Method:</label>
-                <input
-                  type="text"
-                  name="paymentMethod"
-                  value={formData.paymentMethod}
-                  onChange={handleInputChange}
-                  className="w-full p-2 border border-gray-300 rounded-md"
-                  required
-                />
-              </div>
-              {/* Mobile Number Field */}
-              <div className="mb-4">
-                <label className="block text-gray-700">Mobile Number:</label>
-                <input
-                  type="text"
-                  name="mobileNumber"
-                  value={formData.mobileNumber}
-                  onChange={handleInputChange}
-                  className="w-full p-2 border border-gray-300 rounded-md"
-                  required
-                />
-              </div>
-              <div className="flex justify-between">
-                <button
-                  type="submit"
-                  className="bg-blue-500 text-white py-2 px-4 rounded-md"
-                >
-                  Submit
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowAdd(false)}
-                  className="bg-red-500 text-white py-2 px-4 rounded-md"
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      {/* Modal for Order Form */}
+      {isModalOpen && (
+        <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
+            {showAdd && (
+              <form onSubmit={handleSubmit}>
+                <h2 className="text-2xl font-semibold mb-4">Order Details</h2>
+                <div className="mb-4">
+                  <input
+                    type="text"
+                    name="name"
+                    value={orderDetails.name}
+                    onChange={handleInputChange}
+                    placeholder="Name"
+                    className="w-full py-2 px-4 border rounded-md"
+                    required
+                  />
+                </div>
+                <div className="mb-4">
+                  <input
+                    type="text"
+                    name="address"
+                    value={orderDetails.address}
+                    onChange={handleInputChange}
+                    placeholder="Address"
+                    className="w-full py-2 px-4 border rounded-md"
+                    required
+                  />
+                </div>
+                <div className="mb-4">
+                  <input
+                    type="tel"
+                    name="mobile"
+                    value={orderDetails.mobile}
+                    onChange={handleInputChange}
+                    placeholder="Mobile"
+                    className="w-full py-2 px-4 border rounded-md"
+                    required
+                  />
+                </div>
+                <div className="mb-4">
+                  <select
+                    name="paymentOption"
+                    value={orderDetails.paymentOption}
+                    onChange={handlePaymentOptionChange}
+                    className="w-full py-2 px-4 border rounded-md"
+                    required
+                  >
+                    <option value="">Select Payment Option</option>
+                    <option value="COD">Cash on Delivery</option>
+                    <option value="PhonePe">PhonePe</option>
+                    <option value="GPay">GPay</option>
+                  </select>
+                </div>
+                <div className="flex justify-center gap-4">
+                  <button
+                    type="submit"
+                    className="py-2 px-6 bg-purple-600 text-white font-semibold rounded-md"
+                  >
+                    Place Order
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setIsModalOpen(false)}
+                    className="py-2 px-6 bg-gray-400 text-white font-semibold rounded-md"
+                  >
+                    Close
+                  </button>
+                </div>
+              </form>
+            )}
 
-      {/* Confirmation message */}
-      {showConfirmation && (
-        <div className="absolute top-0 left-0 z-50 h-screen w-screen flex justify-center items-center bg-black/40">
-          <div className="w-1/3 bg-white rounded-lg p-6 shadow-lg">
-            <h2 className="text-xl font-semibold">Thank you for your order!</h2>
-            <p className="mt-4">Your order has been successfully placed.</p>
-            <button
-              onClick={() => setShowConfirmation(false)}
-              className="bg-green-500 text-white py-2 px-4 rounded-md mt-4"
-            >
-              Close
-            </button>
+            {/* Order confirmation message */}
+            {orderSubmitted && !showAdd && (
+              <div className="text-lg text-green-500 font-semibold text-center">
+                {orderMessage}
+                <button
+                  className="text-red-600 font-semibold ml-2"
+                  onClick={() => setIsModalOpen(false)}
+                >
+                  Close
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}
